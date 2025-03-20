@@ -12,7 +12,7 @@ namespace RankTracker.Models
         [Required]
         public string UserId { get; set; }
         public IdentityUser? User { get; set; }
-        public ICollection<RankEntry> RankEntries { get; set; }
+        public ICollection<RankEntry>? RankEntries { get; set; }
     }
 
 }
