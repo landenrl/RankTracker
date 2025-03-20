@@ -24,7 +24,6 @@ namespace RankTracker.Models
         public int GameId { get; set; }
         [ForeignKey("GameId")]
 
-        [Required]
         public Game? Game { get; set; }
     }
 }

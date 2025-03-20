@@ -53,6 +53,9 @@ namespace RankTracker.Controllers.Api
         public async Task<ActionResult<RankEntry>> CreateRankEntry([FromBody] RankEntry rankEntry)
         {
 
+            var gm = await _context.Games.FindAsync(rankEntry.GameId);
+            rankEntry.Game = gm;
+
             _context.RankEntries.Add(rankEntry);
             await _context.SaveChangesAsync();
 
@@ -73,6 +76,9 @@ namespace RankTracker.Controllers.Api
             {
                 return NotFound();
             }
+
+            var gm = await _context.Games.FindAsync(rankEntry.GameId);
+            existingRankEntry.Game = gm;
 
             // Update values
             existingRankEntry.Rank = rankEntry.Rank;
