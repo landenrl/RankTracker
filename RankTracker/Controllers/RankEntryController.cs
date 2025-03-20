@@ -161,19 +161,6 @@ namespace GameRankTracker.Controllers
             return View(rankEntry);
         }
 
-        //[HttpPost]
-        //public async Task<JsonResult> DeleteConfirmed(int id)
-        //{
-        //    var rankEntry = await _context.RankEntries.FindAsync(id);
-        //    if (rankEntry == null)
-        //    {
-        //        return Json(new { success = false });
-        //    }
-
-        //    _context.RankEntries.Remove(rankEntry);
-        //    await _context.SaveChangesAsync();
-        //    return Json(new { success = true });
-        //}
         // POST: /RankEntry/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -207,6 +194,30 @@ namespace GameRankTracker.Controllers
 
             return Json(rankEntries);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAjax([FromBody] RankEntry rankEntry)
+        {
+            if (rankEntry == null || rankEntry.GameId == 0)
+            {
+                return BadRequest("Invalid data. Game must be selected.");
+            }
+
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            if (loggedInUser == null)
+            {
+                return Unauthorized();
+            }
+
+            rankEntry.UserId = loggedInUser.Id;
+
+            _context.RankEntries.Add(rankEntry);
+            await _context.SaveChangesAsync();
+
+            return Json(new { message = "Rank entry created successfully!" });
+        }
+
     }
 }
 

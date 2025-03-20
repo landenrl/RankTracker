@@ -10,58 +10,44 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <!-- ✅ Changed the form ID and removed asp-action to prevent traditional submission -->
+        <form id="ajaxRankEntryForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @* <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div> *@
+
             <div class="form-group">
                 <label asp-for="Rank" class="control-label"></label>
-                <input asp-for="Rank" class="form-control" type="number" min="1" max="5000" />
+                <input asp-for="Rank" class="form-control" type="number" min="1" max="5000" required />
                 <span asp-validation-for="Rank" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
+                <input asp-for="Date" class="form-control" type="datetime-local" required />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <input asp-for="Description" class="form-control" required />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            @* <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div> *@
+
             <div class="form-group">
                 <label asp-for="GameId" class="control-label"></label>
-                <select asp-for="GameId" class="form-control" asp-items="ViewBag.GameId">
+                <select asp-for="GameId" class="form-control" asp-items="ViewBag.GameId" required>
                     <option value="">Select a game</option>
                 </select>
                 <span asp-validation-for="GameId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <button type="submit" class="btn btn-primary">Create</button>
             </div>
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    const form = document.querySelector("form");
-
-                    form.addEventListener("submit", function (event) {
-                        event.preventDefault(); // Stop default submission for debugging
-
-                        alert("Form submit event triggered!"); // ✅ This should pop up when you click Create
-
-                        this.submit(); // Manually submit the form afterward
-                    });
-                });
-            </script>
-
         </form>
+
+        <!-- ✅ Result message placeholder -->
+        <div id="resultMessage"></div>
+
     </div>
 </div>
 
@@ -69,6 +55,41 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<!-- ✅ Include jQuery (Required for AJAX) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- ✅ AJAX Script to Handle Submission -->
+<script>
+    $(document).ready(function () {
+        $("#ajaxRankEntryForm").submit(function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var rankEntryData = {
+                Rank: $("#Rank").val(),
+                Date: $("#Date").val(),
+                Description: $("#Description").val(),
+                GameId: $("#GameId").val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/RankEntry/CreateAjax",  // ✅ Calls the new AJAX controller method
+                contentType: "application/json",
+                data: JSON.stringify(rankEntryData),
+                success: function (response) {
+                    $("#resultMessage").html("<p style='color: green;'>Rank entry created successfully!</p>");
+                    $("#ajaxRankEntryForm")[0].reset(); // Clear form fields
+                },
+                error: function (xhr, status, error) {
+                    $("#resultMessage").html("<p style='color: red;'>Error: " + xhr.responseText + "</p>");
+                }
+            });
+        });
+    });
+</script>
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

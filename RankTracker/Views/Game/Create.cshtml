@@ -10,22 +10,24 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <!-- ✅ Assign ID to the form & remove asp-action -->
+        <form id="ajaxGameForm">
+            @Html.AntiForgeryToken() <!-- ✅ Include AntiForgeryToken for security -->
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @* <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div> *@
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" id="GameName" class="form-control" required />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <button type="submit" class="btn btn-primary">Create</button>
             </div>
         </form>
+
+        <!-- ✅ Placeholder for response messages -->
+        <div id="gameResultMessage"></div>
     </div>
 </div>
 
@@ -33,6 +35,39 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<!-- ✅ Include jQuery for AJAX -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- ✅ AJAX Script -->
+<script>
+    $(document).ready(function () {
+        $("#ajaxGameForm").submit(function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var gameData = {
+                Name: $("#GameName").val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/Game/CreateAjax",  // ✅ Calls the new AJAX method in the controller
+                contentType: "application/json",
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() }, // ✅ AntiForgeryToken
+                data: JSON.stringify(gameData),
+                success: function (response) {
+                    $("#gameResultMessage").html("<p style='color: green;'>Game created successfully!</p>");
+                    $("#ajaxGameForm")[0].reset(); // Clear form fields
+                },
+                error: function (xhr) {
+                    $("#gameResultMessage").html("<p style='color: red;'>Error: " + xhr.responseText + "</p>");
+                }
+            });
+        });
+    });
+</script>
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

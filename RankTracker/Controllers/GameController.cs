@@ -162,5 +162,32 @@ namespace GameRankTracker.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        //AJAX
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> CreateAjax([FromBody] Game game)
+        {
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            if (loggedInUser == null)
+            {
+                return Unauthorized();
+            }
+
+            game.UserId = loggedInUser.Id;
+
+            if (string.IsNullOrWhiteSpace(game.Name))
+            {
+                return BadRequest("Game name is required.");
+            }
+
+            _context.Add(game);
+            await _context.SaveChangesAsync();
+
+            return Json(new { message = "Game created successfully!" });
+        }
+
+
     }
 }
