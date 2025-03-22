@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RankTracker")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+28d1872acd5d0fb8aebbf8eff7fa77d295cd219b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dbcf0d4a1362dca013c69b5f529e1b2c6ea26afe")]
 [assembly: System.Reflection.AssemblyProductAttribute("RankTracker")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RankTracker")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
