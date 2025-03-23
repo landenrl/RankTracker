@@ -58,8 +58,10 @@
             fetch(`/RankEntry/GetRankProgression?userId=${userId}&gameId=${gameId}`)
                 .then(response => response.json())
                 .then(data => {
-                    let dates = data.map(entry => new Date(entry.date).toLocaleDateString());
-                    let ranks = data.map(entry => entry.rank);
+                    console.log(data);
+                    let rankEntries = data.$values; // Access the $values property
+                    let dates = rankEntries.map(entry => new Date(entry.date).toLocaleDateString());
+                    let ranks = rankEntries.map(entry => entry.rank);
 
                     rankChart.data.labels = dates;
                     rankChart.data.datasets[0].data = ranks;
@@ -76,5 +78,5 @@
             updateChart(this.value, document.getElementById('gameSelect').value);
         });
     });
-</script>
 
+</script>
