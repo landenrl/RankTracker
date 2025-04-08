@@ -17,9 +17,9 @@ namespace RankTracker.Controllers
     public class GameApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public GameApiController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public GameApiController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;

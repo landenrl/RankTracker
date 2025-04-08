@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using RankTracker.Models;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-public class UserClaimsPrincipalFactory : UserClaimsPrincipalFactory<IdentityUser, IdentityRole>
+public class UserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>
 {
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
-    public UserClaimsPrincipalFactory(UserManager<IdentityUser> userManager,
+    public UserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
         IOptions<IdentityOptions> optionsAccessor)
         : base(userManager, roleManager, optionsAccessor)
@@ -17,7 +18,7 @@ public class UserClaimsPrincipalFactory : UserClaimsPrincipalFactory<IdentityUse
         _roleManager = roleManager;
     }
 
-    public override async Task<ClaimsPrincipal> CreateAsync(IdentityUser user)
+    public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
         var principal = await base.CreateAsync(user);
 

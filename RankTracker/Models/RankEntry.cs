@@ -19,7 +19,7 @@ namespace RankTracker.Models
         [Required]
         public string UserId { get; set; }
         [ForeignKey("UserId")]
-        public IdentityUser? User { get; set; }
+        public ApplicationUser? User { get; set; }
 
         public int GameId { get; set; }
         [ForeignKey("GameId")]

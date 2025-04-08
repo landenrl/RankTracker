@@ -19,7 +19,7 @@
         <label>Select User:</label>
         <select id="userSelect" class="form-control">
             <option value="">-- Select a User --</option>
-            @foreach (var user in ViewData["Users"] as List<Microsoft.AspNetCore.Identity.IdentityUser>)
+            @foreach (var user in ViewData["Users"] as List<RankTracker.Models.ApplicationUser>)
             {
                 <option value="@user.Id">@user.UserName</option>
             }

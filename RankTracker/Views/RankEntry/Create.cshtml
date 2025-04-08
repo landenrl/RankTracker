@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <!-- ✅ Changed the form ID and removed asp-action to prevent traditional submission -->
+        <!--Changed the form ID and removed asp-action to prevent traditional submission -->
         <form id="ajaxRankEntryForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -45,7 +45,7 @@
             </div>
         </form>
 
-        <!-- ✅ Result message placeholder -->
+        <!--Result message placeholder -->
         <div id="resultMessage"></div>
 
     </div>
@@ -55,10 +55,10 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-<!-- ✅ Include jQuery (Required for AJAX) -->
+<!--Include jQuery (Required for AJAX) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- ✅ AJAX Script to Handle Submission -->
+<!--AJAX Script to Handle Submission -->
 <script>
     $(document).ready(function () {
         $("#ajaxRankEntryForm").submit(function (event) {
@@ -73,7 +73,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/RankEntry/CreateAjax",  // ✅ Calls the new AJAX controller method
+                url: "/RankEntry/CreateAjax",  //Calls the new AJAX controller method
                 contentType: "application/json",
                 data: JSON.stringify(rankEntryData),
                 success: function (response) {
