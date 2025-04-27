@@ -10,26 +10,42 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace GameRankTracker.Controllers
 {
+    /// <summary>
+    /// MVC controller for managing RankEntry views and operations.
+    /// Provides functionality for creating, editing, viewing, and deleting rank entries.
+    /// </summary>
     [Authorize]
     public class RankEntryController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        /// <summary>
+        /// Initializes the RankEntryController with the database context and user manager.
+        /// </summary>
+        /// <param name="context">Application database context.</param>
+        /// <param name="userManager">ASP.NET Identity user manager.</param>
         public RankEntryController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
-        // GET: /RankEntry/
+        /// <summary>
+        /// Displays a list of all rank entries.
+        /// </summary>
+        /// <returns>The Index view with rank entries.</returns>
         public async Task<IActionResult> Index()
         {
             var rankEntries = _context.RankEntries.Include(r => r.Game).Include(r => r.User);
             return View(await rankEntries.ToListAsync());
         }
 
-
+        /// <summary>
+        /// Displays details for a specific rank entry.
+        /// </summary>
+        /// <param name="id">The ID of the rank entry to view.</param>
+        /// <returns>The Details view or NotFound if not found.</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -44,7 +60,9 @@ namespace GameRankTracker.Controllers
             return View(rankEntry);
         }
 
-        // GET: /RankEntry/Create
+        /// <summary>
+        /// Displays the form to create a new rank entry.
+        /// </summary>
         [Authorize(Roles = "Admin,User")]
         public IActionResult Create()
         {
@@ -52,7 +70,11 @@ namespace GameRankTracker.Controllers
             return View();
         }
 
-        // POST: /RankEntry/Create
+        /// <summary>
+        /// Handles the POST request to create a new rank entry.
+        /// </summary>
+        /// <param name="rankEntry">The rank entry to create.</param>
+        /// <returns>Redirects to Index if successful, otherwise redisplays form.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles ="Admin,User")]
@@ -85,7 +107,11 @@ namespace GameRankTracker.Controllers
             return View(rankEntry);
         }
 
-        // GET: /RankEntry/Edit/5
+        /// <summary>
+        /// Displays the form to edit an existing rank entry.
+        /// </summary>
+        /// <param name="id">The ID of the rank entry to edit.</param>
+        /// <returns>The Edit view or NotFound/Forbidden.</returns>
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -105,7 +131,12 @@ namespace GameRankTracker.Controllers
             return View(rankEntry);
         }
 
-        // POST: /RankEntry/Edit/5
+        /// <summary>
+        /// Handles the POST request to update an existing rank entry.
+        /// </summary>
+        /// <param name="id">The ID of the rank entry.</param>
+        /// <param name="rankEntry">The updated rank entry object.</param>
+        /// <returns>Redirects to Index if successful, otherwise redisplays form.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles= "Admin,User")]
@@ -143,7 +174,11 @@ namespace GameRankTracker.Controllers
             return View(rankEntry);
         }
 
-        // GET: /RankEntry/Delete/5
+        /// <summary>
+        /// Displays the confirmation page to delete a rank entry.
+        /// </summary>
+        /// <param name="id">The ID of the rank entry to delete.</param>
+        /// <returns>The Delete view or NotFound/Forbidden.</returns>
         [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -161,7 +196,11 @@ namespace GameRankTracker.Controllers
             return View(rankEntry);
         }
 
-        // POST: /RankEntry/Delete/5
+        /// <summary>
+        /// Handles the POST request to delete a rank entry after confirmation.
+        /// </summary>
+        /// <param name="id">The ID of the rank entry to delete.</param>
+        /// <returns>Redirects to Index after deletion.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,User")]
@@ -176,6 +215,10 @@ namespace GameRankTracker.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Displays the Rank Progression page.
+        /// </summary>
+        /// <returns>The RankProgression view with games and users data.</returns>
         public async Task<IActionResult> RankProgression()
         {
             ViewData["Games"] = await _context.Games.ToListAsync();
@@ -183,6 +226,12 @@ namespace GameRankTracker.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Returns rank progression data as JSON for a specific user and game.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="gameId">The ID of the game.</param>
+        /// <returns>JSON list of rank progression entries.</returns>
         [HttpGet]
         public async Task<JsonResult> GetRankProgression(string userId, int gameId)
         {
@@ -195,7 +244,11 @@ namespace GameRankTracker.Controllers
             return Json(rankEntries);
         }
 
-
+        /// <summary>
+        /// Handles AJAX requests to create a new rank entry asynchronously.
+        /// </summary>
+        /// <param name="rankEntry">The rank entry object from the request body.</param>
+        /// <returns>JSON response confirming success or error.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateAjax([FromBody] RankEntry rankEntry)
         {

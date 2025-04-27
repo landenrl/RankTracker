@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace RankTracker.Controllers.Api
 {
+    /// <summary>
+    /// API controller for managing RankEntry entities.
+    /// Provides endpoints to create, read, update, and delete rank entries.
+    /// </summary>
     [EnableCors]
     [Route("api/rankentry")]
     [ApiController]
@@ -16,12 +20,19 @@ namespace RankTracker.Controllers.Api
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Initializes the RankEntryApiController with the database context.
+        /// </summary>
+        /// <param name="context">Application database context.</param>
         public RankEntryApiController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // ✅ GET: api/rankentry (Get All Rank Entries)
+        /// <summary>
+        /// Retrieves all rank entries, including related Game and User information.
+        /// </summary>
+        /// <returns>A list of all rank entries.</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RankEntry>>> GetRankEntries()
         {
@@ -31,7 +42,11 @@ namespace RankTracker.Controllers.Api
                 .ToListAsync();
         }
 
-        // ✅ GET: api/rankentry/5 (Get a Specific Rank Entry by ID)
+        /// <summary>
+        /// Retrieves a specific rank entry by ID.
+        /// </summary>
+        /// <param name="id">The ID of the rank entry to retrieve.</param>
+        /// <returns>The requested rank entry or a NotFound result if not found.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<RankEntry>> GetRankEntry(int id)
         {
@@ -48,7 +63,11 @@ namespace RankTracker.Controllers.Api
             return rankEntry;
         }
 
-        // ✅ POST: api/rankentry (Create a Rank Entry)
+        /// <summary>
+        /// Creates a new rank entry.
+        /// </summary>
+        /// <param name="rankEntry">The RankEntry object to create.</param>
+        /// <returns>The created rank entry with a 201 Created status, or error response.</returns>
         [HttpPost]
         public async Task<ActionResult<RankEntry>> CreateRankEntry([FromBody] RankEntry rankEntry)
         {
@@ -62,7 +81,12 @@ namespace RankTracker.Controllers.Api
             return CreatedAtAction(nameof(GetRankEntry), new { id = rankEntry.Id }, rankEntry);
         }
 
-        // ✅ PUT: api/rankentry/5 (Update a Rank Entry)
+        /// <summary>
+        /// Updates an existing rank entry.
+        /// </summary>
+        /// <param name="id">The ID of the rank entry to update.</param>
+        /// <param name="rankEntry">The updated rank entry object.</param>
+        /// <returns>NoContent if successful, or appropriate error status.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRankEntry(int id, RankEntry rankEntry)
         {
@@ -92,7 +116,11 @@ namespace RankTracker.Controllers.Api
             return NoContent();
         }
 
-        // ✅ DELETE: api/rankentry/5 (Delete a Rank Entry)
+        /// <summary>
+        /// Deletes a rank entry by ID.
+        /// </summary>
+        /// <param name="id">The ID of the rank entry to delete.</param>
+        /// <returns>NoContent if deletion successful, or NotFound if entry does not exist.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRankEntry(int id)
         {

@@ -10,9 +10,9 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <!-- ✅ Assign ID to the form & remove asp-action -->
+        <!-- Assign ID to the form & remove asp-action -->
         <form id="ajaxGameForm">
-            @Html.AntiForgeryToken() <!-- ✅ Include AntiForgeryToken for security -->
+            @Html.AntiForgeryToken() <!-- Include AntiForgeryToken for security -->
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -26,7 +26,7 @@
             </div>
         </form>
 
-        <!-- ✅ Placeholder for response messages -->
+        <!-- Placeholder for response messages -->
         <div id="gameResultMessage"></div>
     </div>
 </div>
@@ -35,10 +35,10 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-<!-- ✅ Include jQuery for AJAX -->
+<!-- Include jQuery for AJAX -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- ✅ AJAX Script -->
+<!-- AJAX Script -->
 <script>
     $(document).ready(function () {
         $("#ajaxGameForm").submit(function (event) {
@@ -50,9 +50,9 @@
 
             $.ajax({
                 type: "POST",
-                url: "/Game/CreateAjax",  // ✅ Calls the new AJAX method in the controller
+                url: "/Game/CreateAjax",  // Calls the new AJAX method in the controller
                 contentType: "application/json",
-                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() }, // ✅ AntiForgeryToken
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() }, // AntiForgeryToken
                 data: JSON.stringify(gameData),
                 success: function (response) {
                     $("#gameResultMessage").html("<p style='color: green;'>Game created successfully!</p>");

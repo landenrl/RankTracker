@@ -11,6 +11,10 @@ using System.Threading.Tasks;
 
 namespace RankTracker.Controllers
 {
+    /// <summary>
+    /// API controller for managing Game entities.
+    /// Provides endpoints to create, read, update, and delete games.
+    /// </summary>
     [EnableCors]
     [Route("api/Game")]
     [ApiController]
@@ -19,20 +23,32 @@ namespace RankTracker.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        /// <summary>
+        /// Constructor to initialize GameApiController with database context and user manager.
+        /// </summary>
+        /// <param name="context">Database context for accessing game data.</param>
+        /// <param name="userManager">User manager for managing ApplicationUser entities.</param>
         public GameApiController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
-        // ✅ GET: api/Game
+        /// <summary>
+        /// Retrieves all games from the database.
+        /// </summary>
+        /// <returns>A list of all games, including associated users.</returns>
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Game>>> GetGames()
         {
             return await _context.Games.Include(g => g.User).ToListAsync();
         }
 
-        // ✅ GET: api/Game/5
+        /// <summary>
+        /// Retrieves a specific game by ID.
+        /// </summary>
+        /// <param name="id">The ID of the game to retrieve.</param>
+        /// <returns>The requested game, or 404 if not found.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Game>> GetGame(int id)
         {
@@ -41,7 +57,11 @@ namespace RankTracker.Controllers
             return game;
         }
 
-        // ✅ POST: api/Game (Create Game)
+        /// <summary>
+        /// Creates a new game.
+        /// </summary>
+        /// <param name="game">The game object to create.</param>
+        /// <returns>The created game with a 201 status, or a 400 error if validation fails.</returns>
         [HttpPost]
         public async Task<ActionResult<Game>> CreateGame(Game game)
         {
@@ -57,7 +77,12 @@ namespace RankTracker.Controllers
             return CreatedAtAction(nameof(GetGame), new { id = game.Id }, game);
         }
 
-        // ✅ PUT: api/Game/5 (Update Game)
+        /// <summary>
+        /// Updates an existing game.
+        /// </summary>
+        /// <param name="id">The ID of the game to update.</param>
+        /// <param name="game">The updated game object.</param>
+        /// <returns>NoContent if successful, BadRequest or NotFound otherwise.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGame(int id, Game game)
         {
@@ -76,7 +101,11 @@ namespace RankTracker.Controllers
             return NoContent();
         }
 
-        // ✅ DELETE: api/Game/5 (Delete Game)
+        /// <summary>
+        /// Deletes a game by ID.
+        /// </summary>
+        /// <param name="id">The ID of the game to delete.</param>
+        /// <returns>NoContent if successful, or NotFound if the game does not exist.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGame(int id)
         {
